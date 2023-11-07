@@ -14,7 +14,7 @@ public class MailController {
 
     //회원가입 시 인증번호 발급
     @PostMapping("/verification-code")
-    public ResponseEntity<String> sendCode(@RequestBody String email){
+    public ResponseEntity<String> sendCode(@RequestParam String email){
         mailService.sendCode(email);
         return ResponseEntity.ok("ok");
     }
