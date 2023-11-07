@@ -1,11 +1,18 @@
 package com.gihae.mailserver.mail;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
@@ -32,8 +39,21 @@ public class MailService {
     }
 
     //파일 전송
-    public void sendFile(){
+    public void sendFile(String email, String text, MultipartFile file){
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setTo(email);
+            helper.setSubject("파일 첨부 메일입니다.");
+            helper.setText(text);
 
+            ByteArrayResource byteArrayResource = new ByteArrayResource(file.getBytes());
+            helper.addAttachment(file.getOriginalFilename(), byteArrayResource);
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String createCode(){
