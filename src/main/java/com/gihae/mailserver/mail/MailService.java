@@ -20,21 +20,15 @@ public class MailService {
     private static final int CODE_LENGTH = 8;
 
     //인증 번호 발송
-    public String sendCode(String email){
+    public void sendCode(String email){
         String code = createCode();
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email); //메일 수신자
-        message.setSubject("인증 번호입니다."); //메일 제목
+        message.setSubject("회원가입 인증 번호입니다."); //메일 제목
         message.setText("인증 번호 : " + code); //메일 내용
 
         javaMailSender.send(message);
-        log.info("code=" + code);
-        return code;
-    }
-
-    //임시 비밀번호 발송
-    public void sendPassword(){
     }
 
     //파일 전송
